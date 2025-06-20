@@ -1,1 +1,55 @@
-
+version: '3.8'
+ 
+services:
+  mysql-service:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "quantumsoft"
+      MYSQL_PASSWORD: "root"
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - mynetwork
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+ 
+  backend:
+    build:
+      context: dadarao/qst-backend
+    container_name: backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/quantumsoft
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql-service:
+        condition: service_healthy
+    networks:
+      - mynetwork
+ 
+  frontend:
+    build:
+      context: dadarao/qst-frontend
+    container_name: frontend
+    ports:
+      - "5502:80"
+    depends_on:
+      - backend
+    networks:
+      - mynetwork
+    environment:
+      REACT_APP_API_BASE_URL: http://backend:8080
+ 
+networks:
+  mynetwork:
+ 
+volumes:
+  mysql-data:
