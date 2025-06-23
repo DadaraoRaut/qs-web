@@ -20,8 +20,7 @@ services:
       retries: 5
  
   backend:
-    build:
-      context: ./backend
+    image: dadarao/qst-backend:latest
     container_name: backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-service:3306/quantumsoft
@@ -36,8 +35,7 @@ services:
       - mynetwork
  
   frontend:
-    build:
-      context: ./frontend
+    image: dadarao/qst-frontend:latest
     container_name: frontend
     ports:
       - "5502:80"
