@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: pmasne98/qst-frontend:m1
+          image: dadarao/qst-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
