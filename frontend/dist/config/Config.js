@@ -1,11 +1,11 @@
 const config = {
-// development: "http://3.109.200.6/:8080", // Backend URL for local testing
-    production: "/api"
- 
+  development: "http://localhost:8080", // For local development
+  production: "/api"                    // For Kubernetes with Nginx proxy
 };
- 
-// Automatically choose the correct environment
-const apiBaseURL = window.location.hostname === "http://3.92.198.245:8080/api/";  
- 
-// Expose the API URL globally
-window.apiBaseURL = apiBaseURL;
+
+// Detect if running locally (on localhost), otherwise use production
+const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
+// Set the base URL globally
+window.apiBaseURL = isLocal ? config.development : config.production;
+
